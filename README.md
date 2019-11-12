@@ -24,3 +24,6 @@ Retrain weights
 ```bash
 train.py --model <model-name> --initial_epoch <inep> --epoch <ep> --batch_size <bsiz> --annotations <path-to-annotations> --classes <path-to-classes> --anchors <path-to-anchors>
 ```
+
+
+## Yes of course, nothing works yet...

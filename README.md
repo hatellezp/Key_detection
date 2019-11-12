@@ -12,15 +12,15 @@ No installation needed. Clone the repository and enjoy.
 
 Key detection in a image 
 ```bash
-detect_key.py --model model-name --image --path path-to-image --output path-to-result-image
+detect_key.py --model <model-name> --image --path <path-to-image> --output <path-to-result-image>
 ```
 
 Key detection in a video
 ```bash
-detect_key.py --model model-name --video --path path-to-video --output path-to-result-video
+detect_key.py --model <model-name> --video --path <path-to-video> --output <path-to-result-video>
 ```
 
 Retrain weights
 ```bash
-train.py --model model-name --initial_epoch inep --epoch ep --batch_size bsiz --annotations path-to-annotations --classes path-to-classes --anchors path-to-anchors
+train.py --model <model-name> --initial_epoch <inep> --epoch <ep> --batch_size <bsiz> --annotations <path-to-annotations> --classes <path-to-classes> --anchors <path-to-anchors>
 ```

@@ -2,6 +2,8 @@
 
 import os
 
-if not os.path.exists("bckgrnd.zip"):
-    os.system("")
+print("Decompressing background and keys .zip files.")
+os.system("unzip data/bckgrnd.zip")
+os.system("unzip data/key_wb.zip")
+
 

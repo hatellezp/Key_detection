@@ -11,7 +11,7 @@ from keras.layers.normalization import BatchNormalization
 from keras.models import Model
 from keras.regularizers import l2
 
-from yolo3.utils import compose
+from models.yolo3.utils import compose
 tf.python_io.control_flow_ops = tf
 
 @wraps(Conv2D)

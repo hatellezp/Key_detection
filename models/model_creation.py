@@ -34,7 +34,9 @@ def load_settings():
 
     # we do this to ensure that all needed values are present and that only
     # needed values are returned
-    try:
+    """
+    I won't be using this form for the moment 
+        try:
         res["model_name"] = data["model_name"]
         res["annotation"] = data["annotation"]
         res["classes"] = data["classes"]
@@ -54,6 +56,9 @@ def load_settings():
         return res
     except Exception as e:
         print("ERROR: {}".format(e))
+    """
+    res.update(data)
+    return res
 
 
 # each time reads names.csv to see what models are valid

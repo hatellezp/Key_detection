@@ -11,14 +11,18 @@ import os
 import numpy as np
 import data_builder.keys_with_background as kwb
 from keras.preprocessing import image
+from models.model_creation import load_settings
 
 
-PATH_TO_KEYS = "data/key_wb"
-PATH_TO_BACKGROUND = "data/bckgrnd"
-PATH_TO_OUTPUT = "data/keys_with_background"
-NUM_IMAGES = 1000
-KEY_SIZE_RANGE = (60, 250)
-BACK_SIZE = 800
+settings = load_settings()
+
+PATH_TO_KEYS = settings["path_to_keys"]
+PATH_TO_BACKGROUND = settings["path_to_background"]
+PATH_TO_OUTPUT = settings["path_to_output"]
+NUM_IMAGES = settings["num_images"]
+KEY_SIZE_RANGE = (settings["key_size_range_low"],
+                  settings["key_size_range_high"])
+BACK_SIZE = settings["back_size"]
 
 
 # some helper functions

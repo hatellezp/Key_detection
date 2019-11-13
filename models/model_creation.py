@@ -2,22 +2,14 @@ import os
 import json
 import csv
 import numpy as np
-import argparse
 
-# import keras.backend as K
 import keras.backend as K
 from keras.layers import Input, Lambda
 from keras.models import Model
 
-# from keras.optimizers import Adam
-# from keras.callbacks import TensorBoard, ModelCheckpoint, ReduceLROnPlateau, EarlyStopping
 from models.yolo3.model import preprocess_true_boxes, yolo_body, \
     tiny_yolo_body, yolo_loss
 from models.yolo3.utils import get_random_data
-
-
-from tensorflow.python.framework import ops
-
 ################################################################################
 ################################################################################
 
@@ -33,30 +25,6 @@ def load_settings():
         data = json.load(json_file)
 
     # we do this to ensure that all needed values are present and that only
-    # needed values are returned
-    """
-    I won't be using this form for the moment 
-        try:
-        res["model_name"] = data["model_name"]
-        res["annotation"] = data["annotation"]
-        res["classes"] = data["classes"]
-        res["anchors"] = data["anchors"]
-        res["initial_epoch1"] = data["initial_epoch1"]
-        res["initial_epoch2"] = data["initial_epoch2"]
-        res["initial_epoch2"] = data["initial_epoch2"]
-        res["epoch1"] = data["epoch1"]
-        res["epoch2"] = data["epoch2"]
-        res["batch_size1"] = data["batch_size1"]
-        res["batch_size2"] = data["batch_size2"]
-        res["logs"] = data["logs"]
-        res["weights"] = data["weigths"]
-        res["configuration"] = data["configuration"]
-        res["training"] = data["training"]
-
-        return res
-    except Exception as e:
-        print("ERROR: {}".format(e))
-    """
     res.update(data)
     return res
 

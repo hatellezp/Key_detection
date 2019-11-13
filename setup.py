@@ -37,9 +37,9 @@ def listdir_nohidden(path):
 def random_cfg(background_paths, key_paths, key_size_range, back_size):
     back_path = np.random.choice(background_paths)
     key_path = np.random.choice(key_paths)
-    key_size = np.random.uniform(*KEY_SIZE_RANGE)
-    x = int(np.random.uniform(BACK_SIZE - key_size - 1))
-    y = int(np.random.uniform(BACK_SIZE - key_size - 1))
+    key_size = np.random.uniform(*key_size_range)
+    x = int(np.random.uniform(back_size - key_size - 1))
+    y = int(np.random.uniform(back_size - key_size - 1))
     angle = int(np.random.uniform(0, 360))
     flip = np.random.choice((True, False))
     flip_bckd = np.random.choice((True, False))

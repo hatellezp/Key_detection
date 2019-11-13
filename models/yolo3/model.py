@@ -11,8 +11,9 @@ from keras.layers.normalization import BatchNormalization
 from keras.models import Model
 from keras.regularizers import l2
 
-from models.yolo3.utils import compose
-tf.python_io.control_flow_ops = tf
+from yolo3.utils import compose
+
+# tf.python_io.control_flow_ops = tf
 
 @wraps(Conv2D)
 def DarknetConv2D(*args, **kwargs):

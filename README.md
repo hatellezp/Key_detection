@@ -10,19 +10,32 @@ No installation needed. Clone the repository and enjoy.
 
 ## Usage
 
+For training with the supplied data first call _setup.py_:
+```bash
+python setup.py
+```
+
+Default settings are provided in _default_settings.json_. If you want to change 
+anything:
+* change model loaded
+* provide a different training set
+* provide a different validation set
+
+then create your own settings file _settings.json_, don't overwrite defaults.
+
 Key detection in a image 
 ```bash
-detect_key.py --model <model-name> --image --path <path-to-image> --output <path-to-result-image>
+python detect_key.py  --image --path <path-to-image> --output <path-to-result-image>
 ```
 
 Key detection in a video
 ```bash
-detect_key.py --model <model-name> --video --path <path-to-video> --output <path-to-result-video>
+python detect_key.py  --video --path <path-to-video> --output <path-to-result-video>
 ```
 
-Retrain weights
+Retrain model
 ```bash
-train.py --model <model-name> --initial_epoch <inep> --epoch <ep> --batch_size <bsiz> --annotations <path-to-annotations> --classes <path-to-classes> --anchors <path-to-anchors>
+train.py 
 ```
 
 

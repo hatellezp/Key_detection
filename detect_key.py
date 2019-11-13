@@ -45,7 +45,7 @@ if __name__ == "__main__":
     settings = mc.load_settings()
     classes = settings["classes"]
     anchors = settings["anchors"]
-    model_path = 'model_data/' + settings['model_name'] + '.h5'
+    model_path = 'model_data/' + settings['model_name'] + '_weights.h5'
 
     if FLAGS.image:
         print ('Image detection mode')

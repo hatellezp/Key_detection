@@ -25,12 +25,12 @@ then create your own settings file _settings.json_, don't overwrite defaults.
 
 Key detection in a image 
 ```bash
-python detect_key.py  --image --path <path-to-image> --output <path-to-result-image>
+python detect_key.py  --image --input <path-to-image> --output <path-to-result-image>
 ```
 
 Key detection in a video
 ```bash
-python detect_key.py  --video --path <path-to-video> --output <path-to-result-video>
+python detect_key.py  --video --input <path-to-video> --output <path-to-result-video>
 ```
 
 Retrain model

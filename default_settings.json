@@ -3,7 +3,7 @@
   "annotation": "data/annotations.csv",
   "classes": "model_data/key_classes.txt",
   "anchors": "model_data/yolo_anchors.txt",
-  "weigths": "model_data/yolov3_zero.weights",
+  "weights": "model_data/yolov3_zero.weights",
   "configuration": "data_cfg/",
   "logs": "logs/",
   "initial_epoch1" : 0,

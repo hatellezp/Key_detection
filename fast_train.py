@@ -8,7 +8,6 @@ from keras.callbacks import TensorBoard, ModelCheckpoint, ReduceLROnPlateau, Ear
 
 from models import model_creation as mc
 from models.model_creation import models as MODELS
-from models import  convert
 
 # settings are stored in 'default_settings.json' or 'settings.json' if it exists
 settings = mc.load_settings()
@@ -16,7 +15,7 @@ settings = mc.load_settings()
 # batch_size, epoch and initial_epochs for both phases
 initial_epoch = settings["fast_initial_epoch"]
 epoch = settings["fast_epoch"]
-batch_size = settings["fast_batch_size1"]
+batch_size = settings["fast_batch_size"]
 
 
 annotation_path = settings["annotation"]
@@ -112,7 +111,6 @@ if model_name in mc.load_valid_model_names():
                                    early_stopping]
     )
     model.save_weights(model_results + model_name + '_weights.h5')
-# Further training if needed.
 
 
 

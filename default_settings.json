@@ -3,11 +3,14 @@
   "annotation": "data/annotations.csv",
   "classes": "model_data/key_classes.txt",
   "anchors": "model_data/yolo_anchors.txt",
+  "weigths": "model_data/yolov3_zero.weights",
+  "configuration": "data_cfg/",
   "logs": "logs/",
   "initial_epoch1" : 0,
   "initial_epoch2": 100,
   "epoch1": 100,
   "epoch2": 200,
   "batch_size1": 64,
-  "batch_size2": 64
+  "batch_size2": 64,
+  "training": 3
 }

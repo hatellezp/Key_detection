@@ -55,15 +55,17 @@ def unique_config_sections(config_file):
     return output_stream
 
 # %%
-def _main(args):
-    config_path = os.path.expanduser(args.config_path)
-    weights_path = os.path.expanduser(args.weights_path)
+def _main(config_path, weights_path, output_path, plot_model=True,
+          weights_only=True):
+# def _main(args):
+    # config_path = os.path.expanduser(args.config_path)
+    # weights_path = os.path.expanduser(args.weights_path)
     assert config_path.endswith('.cfg'), '{} is not a .cfg file'.format(
         config_path)
     assert weights_path.endswith(
         '.weights'), '{} is not a .weights file'.format(weights_path)
 
-    output_path = os.path.expanduser(args.output_path)
+    # output_path = os.path.expanduser(args.output_path)
     assert output_path.endswith(
         '.h5'), 'output path {} is not a .h5 file'.format(output_path)
     output_root = os.path.splitext(output_path)[0]
@@ -238,7 +240,8 @@ def _main(args):
     if len(out_index)==0: out_index.append(len(all_layers)-1)
     model = Model(inputs=input_layer, outputs=[all_layers[i] for i in out_index])
     print(model.summary())
-    if args.weights_only:
+    if weights_only:
+    # if args.weights_only:
         model.save_weights('{}'.format(output_path))
         print('Saved Keras weights to {}'.format(output_path))
     else:
@@ -253,10 +256,13 @@ def _main(args):
     if remaining_weights > 0:
         print('Warning: {} unused weights'.format(remaining_weights))
 
-    if args.plot_model:
+    if plot_model:
+    # if args.plot_model:
         plot(model, to_file='{}.png'.format(output_root), show_shapes=True)
         print('Saved model plot to {}.png'.format(output_root))
 
 
 if __name__ == '__main__':
-    _main(parser.parse_args())
+    args = parser.parse_args()
+    _main(args.config_path, args.weights_path, args.output_path, args.plot_model, args.weights_only)
+    # _main(parser.parse_args())

@@ -16,7 +16,7 @@
   "path_to_keys": "data/key_wb",
   "path_to_background": "data/bckgrnd",
   "path_to_output": "data/keys_with_background",
-  "num_images": 10000,
+  "num_images": 1000,
   "key_size_range_low": 60,
   "key_size_range_high": 250,
   "back_size": 800,

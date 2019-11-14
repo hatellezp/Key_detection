@@ -10,12 +10,13 @@ os.system("rm -r data/keys_with_background")
 os.system("rm data/annotations.csv")
 
 # remove unnecessary files result of training
-print("cleaning temporary models")
-os.system("rm model_data/ep*.h5")
-os.system("rm model_data/*.png")
+if DEFAULT in [2,3]:
+    print("cleaning temporary models")
+    os.system("rm model_data/ep*.h5")
+    os.system("rm model_data/*.png")
 
 # remove trained model
 # BE SURE YOU WANT THIS
-if DEFAULT == 2:
+if DEFAULT == 3:
     print("cleaning weights results")
     os.system("rm model_data/*.h5")

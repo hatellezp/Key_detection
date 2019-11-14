@@ -37,6 +37,7 @@ python setup.py
 ```
 
 After _what I would do is train the model..._
+
 Train the model
 ```bash
 python train.py 

@@ -45,7 +45,12 @@ def random_cfg(background_paths, key_paths, key_size_range, back_size):
     flip_bckd = np.random.choice((True, False))
     blurr = np.random.uniform()
 
-    return (back_path, key_path, key_size, x, y, angle, flip, flip_bckd, blurr)
+    # crop a percentage of the image
+    crop = np.random.uniform(0.05, 0.3)
+    side = np.random.choice(6)
+
+    return (back_path, key_path, key_size, x, y, angle, flip, flip_bckd, blurr,
+            crop, side)
 
 #===============================================================================
 #-----------------------SETUP BEGGINS HERE--------------------------------------
@@ -100,28 +105,83 @@ print("generating {} mixed images".format(num_images))
 # creates num_images images with keys inside as background
 while num_images > 0:
 
-    # creates a random configuration to associate background and key image
-    (back_path, key_path, key_size, x, y, angle, flip, flip_bckd, blurr) = \
-        random_cfg(back_paths, key_paths, KEY_SIZE_RANGE, BACK_SIZE)
 
-    # load background and key image and make the fusion with parameters
-    # from randon cfg
+    # how many keys to be added
+    key_number = np.random.choice(np.array([1, 2, 3, 4]))
+
+    line_suffix_of_csv = ""
+    keys_to_background = []
+    back_path = ""
+    xs = []
+    ys = []
+    blurrs = []
+    flip_bckd = ""
+
+    for i in range(key_number):
+
+        # creates a random configuration to associate background and key image
+        """
+        (back_path,
+         key_path,
+         key_size,
+         x, y,
+         angle,
+         flip,
+         flip_bckd,
+         blurr,
+         crop,
+         side) = random_cfg(back_paths, key_paths, KEY_SIZE_RANGE, BACK_SIZE)
+        """
+        keys_values = random_cfg(back_paths, key_paths, KEY_SIZE_RANGE, BACK_SIZE)
+
+        x = keys_values[3]
+        y = keys_values[4]
+        xs.append(x)
+        ys.append(y)
+        blurrs.append(keys_values[8])
+
+        k = kwb.load_key2(
+                keys_values[1],
+                keys_values[2],
+                keys_values[5],
+                keys_values[6],
+                keys_values[9],
+                keys_values[10]
+            )
+
+        keys_to_background.append(k)
+
+        back_path = keys_values[0]
+        flip_bckd = keys_values[7]
+
+        (height, width) = k.shape[:2]
+        line_suffix_of_csv +=  '{},{},{},{},0 '.format(x, y, x + width, y + height)
+
+        # load background and key image and make the fusion with parameters
+        # from randon cfg
+
     b = kwb.load_background(back_path, BACK_SIZE, BACK_SIZE, flip_bckd)
-    k = kwb.load_key(key_path, key_size, angle, flip)
-    final = kwb.addkey_to_background(b, k, x, y, blurr)
+    # k = kwb.load_key2(key_path, key_size, angle, flip, crop, side)
+    final = kwb.addkey_to_background2(b, keys_to_background, xs, ys, blurrs[0])
 
 
-    # Save image
+        # Save image
 
     output_path = os.path.join(PATH_TO_OUTPUT, 'gen_{:06d}.jpg'.format(num_images))
     img = image.array_to_img(final)
     img.save(output_path)
 
-    # Keep track of image bounding box
+    line_suffix_of_csv = line_suffix_of_csv[:-1]
+    line_of_csv = output_path + ' ' + line_suffix_of_csv + '\n'
+        # Keep track of image bounding box
 
-    (height, width) = k.shape[:2]
-    csv_lines.append('{} {},{},{},{},0\n'.format(output_path, x,
-                     y, x + width, y + height))
+    list_of_h_w = [k.shape[:2] for k in keys_to_background]
+    # (height, width) = k.shape[:2]
+
+
+    # csv_lines.append('{} {},{},{},{},0\n'.format(output_path, x, y, x + width, y + height))
+
+    csv_lines.append(line_of_csv)
 
     # plt.imshow (final)
     # plt.show ()

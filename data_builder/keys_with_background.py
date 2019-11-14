@@ -30,7 +30,6 @@ def find_bounding_box(alpha_channel):
     prj_tot = np.sum(prj_h)
 
     # This function finds the interval where the histogram is at (eps:1-eps) %
-
     def find_limits(projection, epsilon):
 
         integration = 0
@@ -54,12 +53,13 @@ def find_bounding_box(alpha_channel):
 
 
 # =============================================================================
-
-def load_key(
+def load_key2(
     path,
     size,
     rotation=0,
     flip=False,
+    crop=0.0,
+    side = 0 # none:0, up:1, down:2, left:3, right:4, all:5
     ):
     """Load a key image, with alpha channel included, and resize it, rotate it,
 ....and ajust its bounding box tightly
@@ -74,6 +74,17 @@ def load_key(
 
 # =============================================================================
 
+    type_of_croping = {0:"none",
+                       1: "up",
+                       2: "down",
+                       3: "left",
+                       4: "right",
+                       5: "all"}
+
+    side_to_crop = type_of_croping.setdefault(side, "all")
+
+
+
     # Open image
 
     key = cv2.imread(path, cv2.IMREAD_UNCHANGED)
@@ -82,6 +93,25 @@ def load_key(
         key = cv2.flip(key, 0)
     (height, width) = key.shape[:2]
 
+    # crop here
+    width_crop = int(width * crop)
+    height_crop = int(height * crop)
+    if side == 0:
+        pass
+    elif side == 1:
+        key = key[:, width_crop:, :]
+    elif side == 2:
+        key = key[:, : (width-width_crop), :]
+    elif side == 3:
+        key = key[height_crop:, :, :]
+    elif side == 4:
+        key = key[: (height-height_crop), :, :]
+    else: # default is all
+        key = key[height_crop: (height-height_crop),
+              width_crop:(width-width_crop), :]
+
+    # redo
+    (height, width) = key.shape[:2]
     # Increase canvas size to ensure to make any rotation without losing pixels
 
     dim = int(max(height, width) * 2 ** 0.5)
@@ -112,6 +142,8 @@ def load_key(
     key = cv2.resize(key, None, fx=1 / f, fy=1 / f,
                      interpolation=cv2.INTER_AREA)
     (height, width) = key.shape[:2]
+
+    # now that the image is ready, crop
 
     return key
 
@@ -169,6 +201,62 @@ def load_background(
         background = background[:, offset:offset + target_width, :]
 
     return background
+
+
+# =============================================================================
+
+def addkey_to_background2(
+    background,
+    keys,
+    xs,
+    ys,
+    blurr=0,
+    ):
+    """Patch a background image by the addition of a foreground image (key).
+....The two images are combined by mixing them according to the key alpha channel
+
+....background............Background image to patch
+....key....................Image of the key to add to the background
+....x, y................Position in the background image where to add the key
+....blurr................Quantity of blurring (0..1)
+...."""
+
+# =============================================================================
+    length = len(keys)
+    for i in range(length):
+        key = keys[i]
+        x = xs[i]
+        y = ys[i]
+
+        key_alpha = key[:, :, 3]
+        key_rgb = key[:, :, :3]
+        (height, width) = key.shape[:2]
+
+    # For each alpha value at x, y position, create a triplet of this same value
+
+        alpha_factor = 0.9 * key_alpha[:, :, np.newaxis].astype(np.float32) \
+            / 255.0
+        alpha_factor = np.concatenate((alpha_factor, alpha_factor,
+                                      alpha_factor), axis=2)
+
+    # Compute the patch to apply to the image (mix of background and foreground)
+
+        key_rgb = key_rgb.astype(np.float32) * alpha_factor
+        patch = background.astype(np.float32)[y:y + height, x:x + width] \
+        * (1 - alpha_factor)
+        patch += key_rgb
+
+    # patch the image
+
+        background[y:y + height, x:x + width] = patch.astype(np.uint8)
+
+    # A bit of blurring
+
+    kernel_size = int(round(3 * blurr)) * 2 + 1
+    blurred = cv2.GaussianBlur(background, (kernel_size, kernel_size),
+                               0)
+    return blurred
+
 
 
 # =============================================================================
@@ -286,7 +374,7 @@ if __name__ == '__main__':
 
         print (back_path)
         b = load_background(back_path, BACK_SIZE, BACK_SIZE, flip_bckd)
-        k = load_key(key_path, key_size, angle, flip)
+        k = load_key2(key_path, key_size, angle, flip, crop, side)
         final = addkey_to_background(b, k, x, y, blurr)
 
         # Save image

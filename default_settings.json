@@ -1,9 +1,9 @@
 {
-  "model_name": "yolov3",
+  "model_name": "yolov3-tiny",
   "annotation": "data/annotations.csv",
   "classes": "model_data/key_classes.txt",
-  "anchors": "model_data/yolo_anchors.txt",
-  "weights": "model_data/yolov3_zero.weights",
+  "anchors": "model_data/tiny_yolo_anchors.txt",
+  "weights": "model_data/yolov3-tiny_zero.weights",
   "configuration": "data_cfg/",
   "logs": "logs/",
   "initial_epoch1" : 0,

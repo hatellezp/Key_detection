@@ -16,6 +16,7 @@ from models.model_creation import load_settings
 
 settings = load_settings()
 
+
 PATH_TO_KEYS = settings["path_to_keys"]
 PATH_TO_BACKGROUND = settings["path_to_background"]
 PATH_TO_OUTPUT = settings["path_to_output"]
@@ -55,16 +56,9 @@ def random_cfg(background_paths, key_paths, key_size_range, back_size):
 #===============================================================================
 #-----------------------SETUP BEGGINS HERE--------------------------------------
 
-first_str = """Default values:
-    PATH_TO_KEYS: {},
-    PATH_TO_BACKGROUND: {},
-    PATH_TO_OUTPUT=: {},
-    NUM_IMAGES: {},
-    KEY_SIZE_RANGE: {},
-    BACK_SIZE: {},""".format(PATH_TO_KEYS, PATH_TO_BACKGROUND, PATH_TO_OUTPUT,
-                         NUM_IMAGES, KEY_SIZE_RANGE, BACK_SIZE)
-
-print(first_str)
+print("using settings:")
+for key in settings:
+    print("    {}: {}".format(key, settings[key]))
 
 # decompressing images before mixing
 print("Decompressing background and keys .zip files into data/.")

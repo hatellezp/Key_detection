@@ -55,16 +55,28 @@ weights_zero_path = settings["weights"]
 
 model_result_h5 = model_results + model_name + "_weights.h5"
 
+################################################################################
+# call 'python.py train.py' beggins here
+################################################################################
+
 # if the model was trained at least once, load the weights
 # if not call convert.py
 if os.path.exists(model_result_h5):
     already_trained_data = True
+    print("{} already exists, not creating one from {}"
+          .format(model_result_h5,
+                  (settings["configuration"] + model_name + ".cfg")))
 else:
+    print(("{} doestn't exists, creating from {}"
+           .format(model_result_h5,
+                   (settings["configuration"] + model_name + ".cfg"))))
     # call on convert._main to create model
     config_path = settings["configuration"] + model_name + ".cfg"
     # weights_path = weights_zero_path
     convert._main(config_path, weights_zero_path, model_result_h5)
     already_trained = True
+    print("done, .h5 configuration created")
+
 
 # verify the model has been implemented
 if model_name in mc.load_valid_model_names():
@@ -73,19 +85,26 @@ if model_name in mc.load_valid_model_names():
     if model_name == "yolov3-tiny" and len(anchors) != 6:
         raise Exception("ERROR: incorrent number of anchors for yolov3-tiny")
 
+    print("creating model from {}".format(model_result_h5))
     model = create_model(input_shape, anchors, num_classes,
                          freeze_body=2,
                          weights_path=model_result_h5)
 
 
+    # TensorBoard and ModelCheckpoint
     logging = TensorBoard(log_dir=log_dir)
-    checkpoint = ModelCheckpoint(model_results + 'ep{epoch:03d}-loss{loss:.3f}-val_loss{val_loss:.3f}.h5',
-                                 monitor='val_loss', save_weights_only=True, save_best_only=True, period=3)
+    checkpoint = ModelCheckpoint(model_results + ('ep{epoch:03d}-loss{loss:.3f}'
+                                                  '-val_loss{val_loss:.3f}.h5'),
+                                 monitor='val_loss', save_weights_only=True,
+                                 save_best_only=True, period=3)
 
-    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=3, verbose=1)
-    early_stopping = EarlyStopping(monitor='val_loss', min_delta=0, patience=12, verbose=1)
+    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=3,
+                                  verbose=1)
+    early_stopping = EarlyStopping(monitor='val_loss', min_delta=0, patience=12,
+                                   verbose=1)
     val_split = 0.1
 
+    print("opening training data encoded in {}".format(annotation_path))
     with open(annotation_path) as f:
         lines = f.readlines()
     np.random.seed(10101)
@@ -101,8 +120,10 @@ if model_name in mc.load_valid_model_names():
     # 3: whole
     training = settings["training"]
 
-    # Train with frozen layers first, to get a stable loss. Adjust num epochs to your dataset. This step is enough to obtain a not bad model.
+    # Train with frozen layers first, to get a stable loss. Adjust num epochs
+    # to your dataset. This step is enough to obtain a not bad model.
     if training in [1, 3]:
+        print("compiling model with optimizer Adam")
         model.compile(optimizer=Adam(lr=1e-3), loss={
             # use custom yolo_loss Lambda layer.
             'yolo_loss': lambda y_true, y_pred: y_pred})
@@ -129,17 +150,22 @@ if model_name in mc.load_valid_model_names():
         )
 
         if training == 1:
+            print("saving weights to {}"
+                  .format(model_results + model_name + '_weights.h5'))
             model.save_weights(model_results + model_name + '_weights.h5')
 
     # second phase
     if training in [2, 3]:
+        print("second phase, unfreezed layers")
         # unfreeze layers
         for i in range(len(model.layers)):
             model.layers[i].trainable = True
 
+        print("compiling model with Adam optimizer")
         # train
+        # recompile to apply the change
         model.compile(optimizer=Adam(lr=1e-4),
-                      loss={'yolo_loss': lambda y_true, y_pred: y_pred})  # recompile to apply the change
+                      loss={'yolo_loss': lambda y_true, y_pred: y_pred})
 
         print('Unfreeze all of the layers.')
         print('Train on {} samples, val on {} samples, with batch size {}.'
@@ -163,6 +189,9 @@ if model_name in mc.load_valid_model_names():
                             callbacks=[logging, checkpoint, reduce_lr,
                                        early_stopping]
         )
+
+        print("saving model to {}"
+              .format(model_results + model_name + '_weights.h5'))
         model.save_weights(model_results + model_name + '_weights.h5')
     # Further training if needed.
 

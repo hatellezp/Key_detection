@@ -186,7 +186,11 @@ def detect_video(yolo, video_path, output_path=""):
     if not vid.isOpened():
         raise IOError("Couldn't open webcam or video")
 
-    video_FourCC = int(vid.get(cv2.CAP_PROP_FOURCC))
+    # INFO: python and cv2 don't recognizer the first form
+    # video_FourCC = int(vid.get(cv2.CAP_PROP_FOURCC))
+    video_FourCC = cv2.VideoWriter_fourcc(*"mp4v")
+
+
     video_fps = vid.get(cv2.CAP_PROP_FPS)
     video_size = (int(vid.get(cv2.CAP_PROP_FRAME_WIDTH)),
                   int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT)))
@@ -206,14 +210,8 @@ def detect_video(yolo, video_path, output_path=""):
 
     while True:
         return_value, frame = vid.read()
-        print("return_value: {} , \nframe: {}, \ntype_of_frame: {}", return_value, frame, type(frame))
 
-        print("FRAME IS NONE: {}", (frame is None))
-
-        if not return_value:
-            break
-
-        if not(frame is None):
+        if return_value:
             image = Image.fromarray(frame)
             image = yolo.detect_image(image)
             result = np.asarray(image)

@@ -8,7 +8,14 @@ This work is greatly inspired from [belarbi2733/keras_yolov3](https://github.com
 
 ## Installation
 
-No installation needed. Clone the repository and enjoy.
+### Requirements:
+    keras_preprocessing==1.0.5
+    keras_applications==1.0.7
+    keras==2.2.0
+    keras_applications==1.0.7
+    
+There some problems using _tensorflow==2.*_ so don't use it.
+If you have a different setup, please let me know.
 
 ## Setup
 

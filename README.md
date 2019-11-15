@@ -20,7 +20,6 @@ more from [here](https://pjreddie.com/darknet/).
 The project is organized as follows:
 ```bash
 .
-├── clean.py
 ├── data
 │   ├── bckgrnd.zip
 │   └── key_wb.zip
@@ -30,9 +29,6 @@ The project is organized as follows:
 │   ├── darknet53.cfg
 │   ├── yolov3.cfg
 │   └── yolov3-tiny.cfg
-├── default_settings.json
-├── detect_key.py
-├── fast_train.py
 ├── font
 │   ├── FiraMono-Medium.otf
 │   └── SIL Open Font License.txt
@@ -44,19 +40,22 @@ The project is organized as follows:
 │   ├── yolo_anchors.txt
 │   └── yolov3-tiny_zero.weights
 ├── models
-│   ├── convert.py
-│   ├── kmeans.py
-│   ├── model_creation.py
-│   ├── names.csv
 │   ├── yolo3
 │   │   ├── __init__.py
 │   │   ├── model.py
 │   │   └── utils.py
+│   ├── convert.py
+│   ├── kmeans.py
+│   ├── model_creation.py
+│   ├── names.csv
 │   └── yolo.py
+├── clean.py
+├── default_settings.json
+├── detect_key.py
+├── fast_train.py
 ├── README.md
 ├── setup.py
 └── train.py
-
 ```
 
 The main files are:

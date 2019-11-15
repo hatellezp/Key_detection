@@ -15,7 +15,7 @@ This work is greatly inspired from [belarbi2733/keras_yolov3](https://github.com
     keras_applications==1.0.7
     
 There some problems using _tensorflow==2.*_ so don't use it.
-If you have a different setup, please let me know.
+If you have a different _working_ setup, please let me know.
 
 ## Setup
 

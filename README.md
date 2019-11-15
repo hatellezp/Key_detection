@@ -4,12 +4,70 @@ Key_detection is a library that (as the names says) detects keys
 in images. It proposes the uses of several deep neural networks structures.
 It can also be used to detect keys in video files.
 
+This work is greatly inspired from [belarbi2733/keras_yolov3](https://github.com/belarbi2733/keras_yolov3). 
+
 ## Installation
 
 No installation needed. Clone the repository and enjoy.
 
 ## Setup
 
+### Weights:
+Pretrained weights for yolov3-tiny are already present. You can download
+more from [here](https://pjreddie.com/darknet/).
+
+### Strucure
+The project is organized as follows:
+```bash
+.
+├── clean.py
+├── data
+│   ├── bckgrnd.zip
+│   └── key_wb.zip
+├── data_builder
+│   └── keys_with_background.py
+├── data_cfg
+│   ├── darknet53.cfg
+│   ├── yolov3.cfg
+│   └── yolov3-tiny.cfg
+├── default_settings.json
+├── detect_key.py
+├── fast_train.py
+├── font
+│   ├── FiraMono-Medium.otf
+│   └── SIL Open Font License.txt
+├── model_data
+│   ├── coco_classes.txt
+│   ├── key_classes.txt
+│   ├── tiny_yolo_anchors.txt
+│   ├── voc_classes.txt
+│   ├── yolo_anchors.txt
+│   └── yolov3-tiny_zero.weights
+├── models
+│   ├── convert.py
+│   ├── kmeans.py
+│   ├── model_creation.py
+│   ├── names.csv
+│   ├── yolo3
+│   │   ├── __init__.py
+│   │   ├── model.py
+│   │   └── utils.py
+│   └── yolo.py
+├── README.md
+├── setup.py
+└── train.py
+
+```
+
+The main files are:
+* _default_settings.json_
+* _setup.py_
+* _train.py_
+* _fast_train.py_
+* _detect_key.py_
+* _clean.py_
+
+### Default setup:
 Default settings are provided in _default_settings.json_. If you want to change 
 anything:
 * change model loaded
@@ -78,6 +136,12 @@ python detect_key.py  --image --input <path-to-image> --output <path-to-result-i
 Key detection in a video
 ```bash
 python detect_key.py  --video --input <path-to-video> --output <path-to-result-video>
+```
+
+Clean after (or before) you. If you want to delete the generated training data and start over
+(or clean even more: modify **DEFAULT** in _clean.py_)
+```bash
+python clean.py
 ```
 
 ## Contributions

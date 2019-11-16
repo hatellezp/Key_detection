@@ -1,5 +1,4 @@
 # Key_detection
-
 Key_detection is a library that (as the names says) detects keys
 in images. It proposes the uses of several deep neural networks structures.
 It can also be used to detect keys in video files.
@@ -7,6 +6,7 @@ It can also be used to detect keys in video files.
 This work is greatly inspired from [belarbi2733/keras_yolov3](https://github.com/belarbi2733/keras_yolov3). 
 
 ## Installation
+
 
 ### Requirements:
     keras_preprocessing==1.0.5
@@ -17,13 +17,13 @@ This work is greatly inspired from [belarbi2733/keras_yolov3](https://github.com
 There some problems using _tensorflow==2.*_ so don't use it.
 If you have a different _working_ setup, please let me know.
 
-## Setup
 
 ### Weights:
 Pretrained weights for yolov3-tiny are already present. You can download
 more from [here](https://pjreddie.com/darknet/).
 
-### Strucure
+
+### Structure
 The project is organized as follows:
 ```bash
 .

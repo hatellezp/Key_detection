@@ -11,7 +11,7 @@
   "epoch1": 10,
   "epoch2": 20,
   "batch_size1": 16,
-  "batch_size2": 16,
+  "batch_size2": 8,
   "training": 3,
   "data_root": "data/",
   "path_to_keys": "data/key_wb",

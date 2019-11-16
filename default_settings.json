@@ -9,7 +9,7 @@
   "initial_epoch1" : 0,
   "initial_epoch2": 5,
   "epoch1": 10,
-  "epoch2": 20,
+  "epoch2": 40,
   "batch_size1": 16,
   "batch_size2": 8,
   "training": 3,

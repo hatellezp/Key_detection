@@ -27,9 +27,13 @@ more from [here](https://pjreddie.com/darknet/).
 ### Structure
 The project is organized as follows:
 ```bash
-.
-├── data
+── data
 │   ├── bckgrnd.zip
+│   ├── key1.mp4
+│   ├── key2.mp4
+│   ├── key3.mp4
+│   ├── key4.mp4
+│   ├── key5.mp4
 │   └── key_wb.zip
 ├── data_builder
 │   └── keys_with_background.py
@@ -61,9 +65,13 @@ The project is organized as follows:
 ├── default_fast_settings.json
 ├── default_settings.json
 ├── detect_key.py
+├── evaluate.json
+├── evaluate.py
 ├── fast_train.py
 ├── README.md
 ├── setup.py
+├── tiny_default_fast_settings.json
+├── tiny_default_settings.json
 └── train.py
 ```
 

@@ -136,6 +136,7 @@ if __name__ == '__main__':
     ROOT = settings["data_root"]
 
     # several passes
+    print("Doing {} passes".format(PASSES))
     for i in range(PASSES):
 
         # clean the fast training set before you
@@ -168,4 +169,7 @@ if __name__ == '__main__':
 
         # clean after you
         clean.clean(0, prefix='fast/')
+
+    # clean fast directory
+    clean.clean(1)
 

@@ -1,6 +1,5 @@
-import  os
-
-DEFAULT = 1 # 1: leave model alone, 2: remove model to
+import os
+import argparse
 
 def clean(depth, prefix=None):
 
@@ -17,6 +16,7 @@ def clean(depth, prefix=None):
         print("cleaning unzipped data")
         os.system("rm -r data/bckgrnd")
         os.system("rm -r data/key_wb")
+        os.system("rm -r data/fast")
 
     # remove unnecessary files result of training
     if depth >= 2:
@@ -32,4 +32,11 @@ def clean(depth, prefix=None):
 
 
 if __name__ == "__main__":
-    clean(1)
+    parser = argparse.ArgumentParser(argument_default=argparse.SUPPRESS)
+
+    parser.add_argument('--depth', type=int,
+                        help='depth of cleaning', default=1)
+
+    depth = parser.parse_args().depth
+    print("depth: {}".format(depth))
+    clean(depth)

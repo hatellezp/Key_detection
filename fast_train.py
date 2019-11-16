@@ -63,7 +63,8 @@ def fast_train(model_name,
 
         # train
         model.compile(optimizer=Adam(lr=1e-4),
-                      loss={'yolo_loss': lambda y_true, y_pred: y_pred})  # recompile to apply the change
+                      loss={'yolo_loss': lambda y_true, y_pred: y_pred},
+                      metrics=['mean_squared_error'])  # recompile to apply the change
 
         print('Unfreeze all of the layers.')
         print('Train on {} samples, val on {} samples, with batch size {}.'

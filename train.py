@@ -126,7 +126,8 @@ if model_name in mc.load_valid_model_names():
         print("compiling model with optimizer Adam")
         model.compile(optimizer=Adam(lr=1e-3), loss={
             # use custom yolo_loss Lambda layer.
-            'yolo_loss': lambda y_true, y_pred: y_pred})
+            'yolo_loss': lambda y_true, y_pred: y_pred},
+             metrics=['mean_squared_error'])
 
         print('Train on {} samples, val on {} samples, with batch size {}.'
               .format(num_train, num_val, batch_size1))

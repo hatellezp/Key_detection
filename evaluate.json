@@ -1,0 +1,5 @@
+{
+  "batch_size": 16,
+  "num_images": 100,
+  "number_of_evaluations": 10
+}

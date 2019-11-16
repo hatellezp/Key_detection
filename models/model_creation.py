@@ -176,6 +176,32 @@ models = {
 ################################################################################
 
 # data generators
+def evaluation_generator_w(annotation_lines, batch_size, input_shape, anchors,
+                           num_classes):
+    n = len(annotation_lines)
+    i = 0
+    while True:
+        image_data = []
+        box_data = []
+
+        for b in range(batch_size):
+            if i == 0:
+                np.random.shuffle(annotation_lines)
+            image, box = get_random_data(annotation_lines[i], input_shape,
+                                         random=True)
+
+            image_data.append(image)
+            box_data.append(box)
+            i = (i+1) % n
+
+        image_data = np.array(image_data)
+        box_data = np.array(box_data)
+
+        y_true = preprocess_true_boxes(box_data, input_shape, anchors,
+                                       num_classes)
+        yield [image_data, *y_true], np.zeros(batch_size)
+
+
 
 def data_generator(annotation_lines, batch_size, input_shape, anchors,
                    num_classes):

@@ -16,8 +16,8 @@
   "back_size": 800,
   "crop": 0.3,
   "number_keys": 3,
-  "passes": 2,
+  "passes": 1,
   "initial_epoch": 0,
-  "epoch": 10,
+  "epoch": 2,
   "batch_size": 8
 }

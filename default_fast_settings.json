@@ -1,0 +1,23 @@
+{
+  "model_name": "yolov3",
+  "classes": "model_data/key_classes.txt",
+  "anchors": "model_data/yolo_anchors.txt",
+  "weights": "model_data/yolov3_zero.weights",
+  "configuration": "data_cfg/",
+  "logs": "logs/",
+  "data_root": "data/fast",
+  "path_to_keys": "data/key_wb",
+  "path_to_background": "data/bckgrnd",
+  "path_to_output": "data/fast/keys_with_background",
+  "annotation": "data/fast/annotations.csv",
+  "num_images": 100,
+  "key_size_range_low": 60,
+  "key_size_range_high": 250,
+  "back_size": 800,
+  "crop": 0,
+  "number_keys": 1,
+  "passes": 3,
+  "initial_epoch": 0,
+  "epoch": 5,
+  "batch_size": 8
+}

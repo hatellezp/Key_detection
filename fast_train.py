@@ -58,6 +58,7 @@ def fast_train(model_name,
         num_val = int(len(lines) * val_split)
         num_train = len(lines) - num_val
 
+        print("don't listen to him, all layers unfreezed")
         for i in range(len(model.layers)):
             model.layers[i].trainable = True
 
@@ -66,7 +67,6 @@ def fast_train(model_name,
                       loss={'yolo_loss': lambda y_true, y_pred: y_pred},
                       metrics=['mean_squared_error'])  # recompile to apply the change
 
-        print('Unfreeze all of the layers.')
         print('Train on {} samples, val on {} samples, with batch size {}.'
               .format(num_train, num_val, batch_size))
         model.fit_generator(mc.data_generator_wrapper(

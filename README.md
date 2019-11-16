@@ -163,8 +163,15 @@ adjust.
 ### Evaluation
 Use the command
 ```bash
-python evaluate.py -output=
+python evaluate.py -output=path_to_output
 ```
+Some settings are inherited from _settings.json__ the rest of them:
+* num_images: number of images in each step of evaluation
+* batch_size: batch_size at each step
+* number_of_evaluation: how many evaluations are to be executed
+
+are present in _evaluate.json_.
+
 
 ### Key detection
 This part is really simple. You will be using the parameters in *settings.json.

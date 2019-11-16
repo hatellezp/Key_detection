@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import argparse
+import json
 
 from models.model_creation import models as MODELS
 import models.model_creation as mc
@@ -198,7 +199,7 @@ if __name__ == "__main__":
 
     clean.clean(1)
 
-    with open(output, 'w') as f:
+    with open(MODEL_NAME + "_" + output, 'w') as f:
 
         string_output = """
 =====================================================================

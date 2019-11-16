@@ -20,6 +20,12 @@
   "key_size_range_low": 60,
   "key_size_range_high": 250,
   "back_size": 800,
+  "crop": 0.3,
+  "number_keys": 3
+  "fast_num_images": 200
+  "fast_passes": 2,
+  "fast_crop": 0.1,
+  "fast_number_keys": 1,
   "fast_initial_epoch": 2,
   "fast_epoch": 5,
   "fast_batch_size": 8

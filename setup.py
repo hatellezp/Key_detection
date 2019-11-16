@@ -1,21 +1,15 @@
-# TODO: put more images of keys in the same file
-#     I found how to generate several boxes
-#     Generate your own annotation file and class names file.
-#     One row for one image;
-#     Row format: image_file_path box1 box2 ... boxN;
-#     Box format: x_min,y_min,x_max,y_max,class_id (no space).
-
-# for the moment the code is OS dependent
-
 import os
 import numpy as np
+import math
+
 import data_builder.keys_with_background as kwb
+
 from keras.preprocessing import image
 from models.model_creation import load_settings
 
-
+################################################################################
+################################################################################
 settings = load_settings()
-
 
 PATH_TO_KEYS = settings["path_to_keys"]
 PATH_TO_BACKGROUND = settings["path_to_background"]
@@ -24,7 +18,8 @@ NUM_IMAGES = settings["num_images"]
 KEY_SIZE_RANGE = (settings["key_size_range_low"],
                   settings["key_size_range_high"])
 BACK_SIZE = settings["back_size"]
-
+CROP_BOUND = settings["crop"]
+NUMBER_KEYS = settings["number_keys"]
 
 # some helper functions
 
@@ -35,7 +30,8 @@ def listdir_nohidden(path):
             yield f
 
 
-def random_cfg(background_paths, key_paths, key_size_range, back_size):
+def random_cfg(background_paths, key_paths, key_size_range, back_size,
+               crop_bound):
     back_path = np.random.choice(background_paths)
     key_path = np.random.choice(key_paths)
     key_size = np.random.uniform(*key_size_range)
@@ -47,11 +43,170 @@ def random_cfg(background_paths, key_paths, key_size_range, back_size):
     blurr = np.random.uniform()
 
     # crop a percentage of the image
-    crop = np.random.uniform(0.05, 0.3)
+    # garuanteed we keep som 'reasonable bounds'
+    crop_bound = max(min(crop_bound, 0.5), 0.05)
+
+    crop = np.random.uniform(0.03, crop_bound)
     side = np.random.choice(6)
 
     return (back_path, key_path, key_size, x, y, angle, flip, flip_bckd, blurr,
             crop, side)
+
+#===============================================================================
+# this big function generates the examples
+
+def decompress_data():
+    print("Decompressing background and keys .zip files into data/.")
+    try:
+        os.system("unzip data/bckgrnd.zip -d data/")
+        os.system("unzip data/key_wb.zip -d data/")
+        print("Done decompressing.")
+    except Exception as e:
+        print("ERROR: {}".format(e))
+
+
+def generates_examples(
+        path_to_keys,
+        path_to_background,
+        path_to_output,
+        number_of_images,
+        number_keys,
+        key_size_range,
+        back_size,
+        crop_bound,
+):
+
+    print("using settings:")
+    for key in settings:
+        print("    {}: {}".format(key, settings[key]))
+
+    # decompressing images before mixing
+    decompress_data()
+
+    # create output of mixing directory if it doesn't exist
+    if not os.path.exists(path_to_output):
+        print("Attempting to create output directory")
+        try:
+            os.makedirs(path_to_output)
+            print("Output directory created.")
+        except Exception as e:
+            print("ERROR: {}".format(e))
+
+    # load paths..
+    print("loading keys and background image paths as lists")
+
+    # Load paths to key
+    key_paths = []
+    for path in listdir_nohidden(path_to_keys):
+        key_paths.append(os.path.join(path_to_keys, path))
+
+    # Load paths to backgrounds
+    back_paths = []
+    for path in listdir_nohidden(path_to_background):
+        back_paths.append(os.path.join(path_to_background, path))
+
+    csv_lines = []
+    num_images = number_of_images
+
+    print("generating {} mixed images".format(num_images))
+    # creates num_images images with keys inside as background
+    while num_images > 0:
+
+        # the generator of examples put now several keys in a same background
+        # a random configuration is made and used to put the keys in the background
+
+        # how many keys to be added
+        key_number_list = [1]
+        for i in range(2, (number_keys)):
+            key_number_list.append(i)
+        key_number = np.random.choice(np.array(key_number_list))
+
+        # initial values before generating the list of image of keys to be added
+        line_suffix_of_csv = ""
+        keys_to_background = []
+        back_path = ""
+        xs = []
+        ys = []
+        blurrs = []
+        flip_bckd = ""
+
+        for i in range(key_number):
+            # creates a random configuration to associate background and key image
+            # takes as argument the list of paths to keys and backgrounds,
+            # the size of the keys, the background size and how much the image of
+            # the key is to be cropped
+            keys_values = random_cfg(back_paths, key_paths, key_size_range,
+                                     back_size, crop_bound)
+
+            # extract the necessary values from 'keys_values' (it is a tuple)
+            x = keys_values[3]
+            y = keys_values[4]
+            xs.append(x)
+            ys.append(y)
+            blurrs.append(keys_values[8])
+
+            # load a key following the configuration
+            k = kwb.load_key2(
+                keys_values[1],
+                keys_values[2],
+                keys_values[5],
+                keys_values[6],
+                keys_values[9],
+                keys_values[10]
+            )
+
+            # append the key to the list of keys
+            keys_to_background.append(k)
+
+            # define the back path
+            back_path = keys_values[0]
+            flip_bckd = keys_values[7]
+
+            # add the box to the line in the csv file (annotations.csv) which is
+            # the training set
+            (height, width) = k.shape[:2]
+            line_suffix_of_csv += '{},{},{},{},0 '.format(x, y, x + width,
+                                                          y + height)
+
+        # load background and key image and make the fusion with parameters
+        # from randon cfg
+        b = kwb.load_background(back_path, back_size, back_size, flip_bckd)
+        final = kwb.addkey_to_background2(b, keys_to_background, xs, ys, blurrs[0])
+
+        # Save image
+        output_path = os.path.join(path_to_output, 'gen_{:06d}.jpg'
+                                   .format(num_images))
+        img = image.array_to_img(final)
+        img.save(output_path)
+
+        # creates the line which is the training example adding the prefix
+        # and after the several boxes
+        line_suffix_of_csv = line_suffix_of_csv[:-1]
+        line_of_csv = output_path + ' ' + line_suffix_of_csv + '\n'
+
+        # list_of_h_w = [k.shape[:2] for k in keys_to_background]
+        # add line to the csv_lines
+        csv_lines.append(line_of_csv)
+
+        num_images -= 1
+        if num_images % 100 == 0:
+            print(num_images, ' left')  # for python2 compatibility?
+
+    # write the examples to the .csv
+    with open(os.path.join(path_to_output, 'annotations.csv'), 'w') as f:
+        for l in csv_lines:
+            f.write(l)
+
+    print("Moving annotations.csv to data/")
+    try:
+        os.system("mv {} data/".format(os.path.join(path_to_output,
+                                                    'annotations.csv')))
+    except Exception as e:
+        print("ERROR: {}".format(e))
+
+    print("Done, successfully generated {} mixed images in {}"
+          .format(num_images, path_to_output))
+
 
 #===============================================================================
 #-----------------------SETUP BEGGINS HERE--------------------------------------
@@ -99,10 +254,16 @@ print("generating {} mixed images".format(num_images))
 # creates num_images images with keys inside as background
 while num_images > 0:
 
+    # the generator of examples put now several keys in a same background
+    # a random configuration is made and used to put the keys in the background
 
     # how many keys to be added
-    key_number = np.random.choice(np.array([1, 2, 3, 4]))
+    key_number_list = [1]
+    for i in range(2, (number_keys)):
+        key_number_list.append(i)
+    key_number = np.random.choice(np.array(key_number_list))
 
+    # initial values before generating the list of image of keys to be added
     line_suffix_of_csv = ""
     keys_to_background = []
     back_path = ""
@@ -114,26 +275,20 @@ while num_images > 0:
     for i in range(key_number):
 
         # creates a random configuration to associate background and key image
-        """
-        (back_path,
-         key_path,
-         key_size,
-         x, y,
-         angle,
-         flip,
-         flip_bckd,
-         blurr,
-         crop,
-         side) = random_cfg(back_paths, key_paths, KEY_SIZE_RANGE, BACK_SIZE)
-        """
-        keys_values = random_cfg(back_paths, key_paths, KEY_SIZE_RANGE, BACK_SIZE)
+        # takes as argument the list of paths to keys and backgrounds,
+        # the size of the keys, the background size and how much the image of
+        # the key is to be cropped
+        keys_values = random_cfg(back_paths, key_paths, KEY_SIZE_RANGE,
+                                 BACK_SIZE, crop_bound)
 
+        # extract the necessary values from 'keys_values' (it is a tuple)
         x = keys_values[3]
         y = keys_values[4]
         xs.append(x)
         ys.append(y)
         blurrs.append(keys_values[8])
 
+        # load a key following the configuration
         k = kwb.load_key2(
                 keys_values[1],
                 keys_values[2],
@@ -143,47 +298,43 @@ while num_images > 0:
                 keys_values[10]
             )
 
+        # append the key to the list of keys
         keys_to_background.append(k)
 
+        # define the back path
         back_path = keys_values[0]
         flip_bckd = keys_values[7]
 
+        # add the box to the line in the csv file (annotations.csv) which is
+        # the training set
         (height, width) = k.shape[:2]
-        line_suffix_of_csv +=  '{},{},{},{},0 '.format(x, y, x + width, y + height)
+        line_suffix_of_csv +=  '{},{},{},{},0 '.format(x, y, x + width,
+                                                       y + height)
 
-        # load background and key image and make the fusion with parameters
-        # from randon cfg
-
+    # load background and key image and make the fusion with parameters
+    # from randon cfg
     b = kwb.load_background(back_path, BACK_SIZE, BACK_SIZE, flip_bckd)
-    # k = kwb.load_key2(key_path, key_size, angle, flip, crop, side)
     final = kwb.addkey_to_background2(b, keys_to_background, xs, ys, blurrs[0])
 
-
-        # Save image
-
+    # Save image
     output_path = os.path.join(PATH_TO_OUTPUT, 'gen_{:06d}.jpg'.format(num_images))
     img = image.array_to_img(final)
     img.save(output_path)
 
+    # creates the line which is the training example adding the prefix
+    # and after the several boxes
     line_suffix_of_csv = line_suffix_of_csv[:-1]
     line_of_csv = output_path + ' ' + line_suffix_of_csv + '\n'
-        # Keep track of image bounding box
 
-    list_of_h_w = [k.shape[:2] for k in keys_to_background]
-    # (height, width) = k.shape[:2]
-
-
-    # csv_lines.append('{} {},{},{},{},0\n'.format(output_path, x, y, x + width, y + height))
-
+    # list_of_h_w = [k.shape[:2] for k in keys_to_background]
+    # add line to the csv_lines
     csv_lines.append(line_of_csv)
-
-    # plt.imshow (final)
-    # plt.show ()
 
     num_images -= 1
     if num_images % 100 == 0:
         print (num_images, ' left') # for python2 compatibility?
 
+# write the examples to the .csv
 with open(os.path.join(PATH_TO_OUTPUT, 'annotations.csv'), 'w') as f:
     for l in csv_lines:
         f.write(l)

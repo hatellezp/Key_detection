@@ -16,7 +16,8 @@ settings = mc.load_settings()
 initial_epoch = settings["fast_initial_epoch"]
 epoch = settings["fast_epoch"]
 batch_size = settings["fast_batch_size"]
-
+passes = settings["fast_passes"]
+num_images = settings["fast_num_images"]
 
 annotation_path = settings["annotation"]
 
@@ -117,7 +118,12 @@ if model_name in mc.load_valid_model_names():
 
 
 
-
+"""
+    should do:
+        clean.py
+        fast_train.py
+        clean.py
+"""
 
 
 

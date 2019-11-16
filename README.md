@@ -57,6 +57,7 @@ The project is organized as follows:
 │   ├── names.csv
 │   └── yolo.py
 ├── clean.py
+├── default_fast_settings.json
 ├── default_settings.json
 ├── detect_key.py
 ├── fast_train.py
@@ -65,8 +66,9 @@ The project is organized as follows:
 └── train.py
 ```
 
-The main files are:
+The main files are (in order of use):
 * _default_settings.json_
+* _default_fast_settings.json_
 * _setup.py_
 * _train.py_
 * _fast_train.py_
@@ -80,9 +82,10 @@ anything:
 * provide a different training set
 * provide a different validation set
 
-then create your own settings file _settings.json_, don't overwrite defaults **(please)**.
+then create your own settings file _settings.json_, don't overwrite defaults **(please)** 
+(_this is also true for default_fast_settings.json_).
 
-parameters in _default_settings.json_:
+Parameters in _default_settings.json_:
 * model_name: a name of an implemented model, valid models are in 'models/names.csv'
 * annotation: contains the trained data
 * classes: classes you which to train the model to
@@ -101,7 +104,10 @@ parameters in _default_settings.json_:
 	* 3: whole
 * path_to_keys: name says it all
 * path_to_background : ...
-* now same parameters as training phases with 'fast_' as prefix for the _fast_train.py_ file
+
+**The same parameters exists in _default_fast_settings.json_ but are for 
+_fast_train.py_**.
+
 
 ## Usage
 
@@ -118,21 +124,63 @@ zero: use the Pscal VOC data)**.
 Again, go to (https://pjreddie.com/darknet/yolo/), is a better place than this
 repository, or stay here, who am I to judge...
 
+### Setup
 For training with the supplied data first call _setup.py_:
 ```bash
 python setup.py
 ```
+This file will generate examples in the form of a .csv file and a directory of
+images.
+Each line in the .csv file follows the syntax:
 
+    example : path_to_image box_1,class_1 box_2,class_2, ... box_N,class_N
+    box_i   : x_coordinate,y_coordinate,widht,height 
+    
+note that are spaces between each pair _box,class_ and no space in the 
+specification of a box.
+
+What *settings.json parameters are important for _setup.py_:
+* annotation: path to the .csv file
+* path_to_keys: path to the key-only images
+* path_to_background: path to the back background-only images
+* path_to_output: path to where the mixed images will live
+* num_images: number of examples to generate
+* key_size_range_low: lower bound of the size of the result keys
+* key_size_range_high: upper bound of the size of the result keys
+* back_size: size of the background image
+* crop: keys will be cropped before mix with a percentange between 
+    (5%, (100*crop)%)
+* number_keys: there will be between (1, number_keys) in each result image 
+
+### Train
 After _what I would do is train the model..._
 
 Train the model
 ```bash
 python train.py 
 ```
-or perform a fast training to adjust a little
-```bash
-python fast_train.py 
-```
+
+What *settings.json parameters are important for _setup.py_:
+* model_name: yolov3, yolov3-tiny... model to be used
+* classes: path to file with the target number of classes
+* anchors: path to anchors file
+* weights: path to *.weights file with pretrained values
+* configuration: path to *.cfg file with the configuration of the
+  network
+* logs: path to logs dir to keep track if needed
+* initial_epoch(1,2): value for initial epoch
+* epoch(1,2): number of epochs
+* batch_size(1,2): batch_size
+* training: type of training,
+    * 1: only train with freezed layers
+    * 2: train with unfreezed layers
+    * 3: perform 1-training and then 2-training
+
+The numbers (1,2) in the parameters are for which type of training you want to
+adjust.    
+
+### Key detection
+This part is really simple. You will be using the parameters in *settings.json.
 
 Key detection in a image 
 ```bash
@@ -144,8 +192,24 @@ Key detection in a video
 python detect_key.py  --video --input <path-to-video> --output <path-to-result-video>
 ```
 
-Clean after (or before) you. If you want to delete the generated training data and start over
-(or clean even more: modify **DEFAULT** in _clean.py_)
+### Adjust
+You can always perform a "fast" training that generates new data, train your
+network in it and clean after. Parameters are the same as *settings.json, but
+this time they live in *fast_settings.json.
+```bash
+python fast_train.py 
+```
+
+### Clean
+
+Clean after (or before) you. You can call it anytime. You have different depths:
+* 0: clean only generated data
+* 1: clean unzipped data
+* 2: clean temporary *.h5
+* 3: clean the result model *.h5
+The script is accumulatory, calling with 2 will perfomr 0,1 and 2.
+Default is 1.
+
 ```bash
 python clean.py
 ```

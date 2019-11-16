@@ -12,6 +12,13 @@ from keras.optimizers import Adam
 from keras.callbacks import TensorBoard, ModelCheckpoint, ReduceLROnPlateau, \
     EarlyStopping
 
+def load_evaluate_settings():
+    # load settings particular to evaluate.py
+    evaljson = {}
+    with open("evaluate.json") as json_file:
+        data = json.load(json_file)
+    evaljson.update(data)
+    return evaljson
 
 def evaluate_model(
         model_name,
@@ -63,7 +70,8 @@ def evaluate_model(
         # train
         model.compile(optimizer=Adam(lr=1e-4),
                       loss={'yolo_loss': lambda y_true, y_pred: y_pred},
-                      metrics=['mean_squared_error'])  # recompile to apply the change
+                      metrics=load_evaluate_settings()["metrics"])
+        # recompile to apply the change
 
 
         steps = int(len(lines) / batch_size)
@@ -86,12 +94,7 @@ def evaluate_model(
 if __name__ == "__main__":
     # create evaluation function here
     settings = mc.load_settings()
-
-    # load settings particular to evaluate.py
-    evaljson = {}
-    with open("evaluate.json") as json_file:
-        data = json.load(json_file)
-    evaljson.update(data)
+    evaljson = load_evaluate_settings()
 
     #=========================================================================
     # note that sometimes the values are loaded from evaluate.json
@@ -156,6 +159,32 @@ if __name__ == "__main__":
     mean_loss = 0
     mean_mean_squared_error = 0
 
+
+    info_str="""
+===========================================================
+evaluating using parameters:
+            MODEL_NAME, {}
+            MODEL_RESULT_H5, {}
+            INPUT_SHAPE, {}
+            NUM_CLASSES, {}
+            LOG_DIR, {}
+            MODEL_RESULTS, {}
+            ANNOTATION_PATH, {}
+            BATCH_SIZE {}
+            NUMBER_OF_EVALUATIONS: {}
+            METRICS: {}
+===========================================================
+    """.format(MODEL_NAME,
+               MODEL_RESULT_H5,
+               INPUT_SHAPE,
+               NUM_CLASSES,
+               LOG_DIR,
+               MODEL_RESULTS,
+               ANNOTATION_PATH,
+               BATCH_SIZE,
+               NUMBER_OF_EVALUATIONS,
+               evaljson["metrics"])
+    print(info_str)
 
     for i in range(NUMBER_OF_EVALUATIONS):
 

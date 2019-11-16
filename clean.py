@@ -2,11 +2,16 @@ import  os
 
 DEFAULT = 1 # 1: leave model alone, 2: remove model to
 
-def clean(depth):
+def clean(depth, prefix=None):
+
+    # to remove data in fast training set or normal training se
+    if prefix is None:
+        prefix = ''
+
     # remove generated data
     print("cleaning generated data")
-    os.system("rm -r data/keys_with_background")
-    os.system("rm data/annotations.csv")
+    os.system("rm -r data/{}keys_with_background".format(prefix))
+    os.system("rm data/{}annotations.csv".format(prefix))
 
     if depth >= 1:
         print("cleaning unzipped data")
@@ -26,5 +31,5 @@ def clean(depth):
         os.system("rm model_data/*.h5")
 
 
-if __name__ == "__depth__":
+if __name__ == "__main__":
     clean(1)

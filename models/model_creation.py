@@ -28,6 +28,21 @@ def load_settings():
     res.update(data)
     return res
 
+def load_fast_settings():
+    # if new settings exists use them, else load default
+    if os.path.exists("fast_settings.json"):
+        json_path = "fast_settings.json"
+    else:
+        json_path = "default_fast_settings.json"
+
+    res = {}
+    with open(json_path) as json_file:
+        data = json.load(json_file)
+
+    # we do this to ensure that all needed values are present and that only
+    res.update(data)
+    return res
+
 
 # each time reads names.csv to see what models are valid
 # load valid models names

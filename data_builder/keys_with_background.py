@@ -59,7 +59,7 @@ def load_key2(
     rotation=0,
     flip=False,
     crop=0.0,
-    side = 0 # none:0, up:1, down:2, left:3, right:4, all:5
+    side=0,# none:0, up:1, down:2, left:3, right:4, all:5
     ):
     """Load a key image, with alpha channel included, and resize it, rotate it,
 ....and ajust its bounding box tightly
@@ -74,17 +74,6 @@ def load_key2(
 
 # =============================================================================
 
-    type_of_croping = {0:"none",
-                       1: "up",
-                       2: "down",
-                       3: "left",
-                       4: "right",
-                       5: "all"}
-
-    side_to_crop = type_of_croping.setdefault(side, "all")
-
-
-
     # Open image
 
     key = cv2.imread(path, cv2.IMREAD_UNCHANGED)
@@ -94,21 +83,22 @@ def load_key2(
     (height, width) = key.shape[:2]
 
     # crop here
-    width_crop = int(width * crop)
-    height_crop = int(height * crop)
-    if side == 0:
-        pass
-    elif side == 1:
-        key = key[:, width_crop:, :]
-    elif side == 2:
-        key = key[:, : (width-width_crop), :]
-    elif side == 3:
-        key = key[height_crop:, :, :]
-    elif side == 4:
-        key = key[: (height-height_crop), :, :]
-    else: # default is all
-        key = key[height_crop: (height-height_crop),
-              width_crop:(width-width_crop), :]
+    if crop != 0.:
+        width_crop = int(width * crop)
+        height_crop = int(height * crop)
+        if side == 0:
+            pass
+        elif side == 1:
+            key = key[:, width_crop:, :]
+        elif side == 2:
+            key = key[:, : (width-width_crop), :]
+        elif side == 3:
+            key = key[height_crop:, :, :]
+        elif side == 4:
+            key = key[: (height-height_crop), :, :]
+        else: # default is all
+            key = key[height_crop: (height-height_crop),
+                  width_crop:(width-width_crop), :]
 
     # redo
     (height, width) = key.shape[:2]

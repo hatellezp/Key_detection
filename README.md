@@ -160,6 +160,12 @@ The numbers (1,2) in the parameters are for which type of training you want to
 adjust.    
 
 
+### Evaluation
+Use the command
+```bash
+python evaluate.py -output=
+```
+
 ### Key detection
 This part is really simple. You will be using the parameters in *settings.json.
 

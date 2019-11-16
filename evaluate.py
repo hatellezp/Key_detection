@@ -199,7 +199,12 @@ if __name__ == "__main__":
 
     clean.clean(1)
 
-    with open(MODEL_NAME + "_" + output, 'w') as f:
+    # rename path to output
+    list_output = output.split('/')
+    list_output[-1] = MODEL_NAME + '_' + list_output[-1]
+    output = '/'.join(list_output)
+
+    with open(output, 'w') as f:
 
         string_output = """
 =====================================================================
@@ -208,13 +213,12 @@ if __name__ == "__main__":
     number of steps: {}
     number of examples by step: {} 
 ======================================================================
-         
-        """.format(MODEL_NAME, BATCH_SIZE, number_of_evaluations, NUM_IMAGES)
+""".format(MODEL_NAME, BATCH_SIZE, number_of_evaluations, NUM_IMAGES)
         f.write(string_output)
 
         for i in range(len(results)):
 
-            string_output =  "- at step {}:\n    loss: {}\n    mse: {}\n"\
+            string_output = "- at step {}:\n    loss: {}\n    mse: {}\n"\
                 .format(i + 1, results[i][0], results[i][1])
 
             print(string_output)

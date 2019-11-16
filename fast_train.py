@@ -139,6 +139,8 @@ if __name__ == '__main__':
     print("Doing {} passes".format(PASSES))
     for i in range(PASSES):
 
+        print("pass {} of {}".format(i+1, PASSES))
+
         # clean the fast training set before you
         clean.clean(0, prefix="fast/")
 

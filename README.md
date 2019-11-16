@@ -75,6 +75,7 @@ The main files are (in order of use):
 * _detect_key.py_
 * _clean.py_
 
+
 ### Default setup:
 Default settings are provided in _default_settings.json_. If you want to change 
 anything:
@@ -85,32 +86,8 @@ anything:
 then create your own settings file _settings.json_, don't overwrite defaults **(please)** 
 (_this is also true for default_fast_settings.json_).
 
-Parameters in _default_settings.json_:
-* model_name: a name of an implemented model, valid models are in 'models/names.csv'
-* annotation: contains the trained data
-* classes: classes you which to train the model to
-* anchors: contains how many anchors and representative class value for each class
-* weigths: some pretrained weights to not do the work from the beginning
-* configuration: .cfg file to build your specified model
-* logs: directory to save logs if you want to
-* for the freezed phase:
-	* initial_epoch1: the name describes it
-	* epoch1: same
-	* batch_size1: guess it
-* for the unfreezed phase you have the same parameters with number 2 as suffix
-* training: defines type of training done with _train.py_:
-	* 1: only freezed
-	* 2: only unfreezed
-	* 3: whole
-* path_to_keys: name says it all
-* path_to_background : ...
-
-**The same parameters exists in _default_fast_settings.json_ but are for 
-_fast_train.py_**.
-
 
 ## Usage
-
 Several models can be implemented. For the moment we use only
 
 * _yolov3_ 
@@ -123,6 +100,7 @@ zero: use the Pscal VOC data)**.
 
 Again, go to (https://pjreddie.com/darknet/yolo/), is a better place than this
 repository, or stay here, who am I to judge...
+
 
 ### Setup
 For training with the supplied data first call _setup.py_:
@@ -152,6 +130,7 @@ What *settings.json parameters are important for _setup.py_:
     (5%, (100*crop)%)
 * number_keys: there will be between (1, number_keys) in each result image 
 
+
 ### Train
 After _what I would do is train the model..._
 
@@ -179,6 +158,7 @@ What *settings.json parameters are important for _setup.py_:
 The numbers (1,2) in the parameters are for which type of training you want to
 adjust.    
 
+
 ### Key detection
 This part is really simple. You will be using the parameters in *settings.json.
 
@@ -200,8 +180,8 @@ this time they live in *fast_settings.json.
 python fast_train.py 
 ```
 
-### Clean
 
+### Clean
 Clean after (or before) you. You can call it anytime. You have different depths:
 * 0: clean only generated data
 * 1: clean unzipped data

@@ -191,7 +191,7 @@ The script is accumulatory, calling with 2 will perfomr 0,1 and 2.
 Default is 1.
 
 ```bash
-python clean.py
+python clean.py --depth=d
 ```
 
 ## Contributions

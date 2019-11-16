@@ -38,5 +38,21 @@ if __name__ == "__main__":
                         help='depth of cleaning', default=1)
 
     depth = parser.parse_args().depth
-    print("depth: {}".format(depth))
-    clean(depth)
+    # print("depth: {}".format(depth))
+
+    if depth == 3:
+        good_answer = False
+        value = ""
+
+        while not good_answer:
+            value = input(("You gave depth 3. Are you sure you want to clean "
+                           "everyting? Even your result model? [N]o/[Y]es  "))
+
+            if value.strip() in ['N', 'Y']:
+                good_answer = True
+
+        if value == 'Y':
+            print("cleaning everything, hope you are sure about this")
+            clean(depth)
+    else:
+        clean(depth)

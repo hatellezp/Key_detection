@@ -187,7 +187,8 @@ Clean after (or before) you. You can call it anytime. You have different depths:
 * 1: clean unzipped data
 * 2: clean temporary *.h5
 * 3: clean the result model *.h5
-The script is accumulatory, calling with 2 will perfomr 0,1 and 2.
+
+The depth value is increasing, calling with 2 will perform 0,1 and 2.
 Default is 1.
 
 ```bash

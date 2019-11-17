@@ -3,10 +3,17 @@ Key_detection is a library that (as the names says) detects keys
 in images. It proposes the uses of several deep neural networks structures.
 It can also be used to detect keys in video files.
 
+
+![](sample.gif)
+
+
 This work is greatly inspired from [belarbi2733/keras_yolov3](https://github.com/belarbi2733/keras_yolov3). 
 
-## Installation
+### Sample
+You have some results in the _video_ directory.
 
+
+## Installation
 
 ### Requirements:
     keras_preprocessing==1.0.5
@@ -27,13 +34,8 @@ more from [here](https://pjreddie.com/darknet/).
 ### Structure
 The project is organized as follows:
 ```bash
-.
 ├── data
 │   ├── bckgrnd.zip
-│   ├── key1.mp4
-│   ├── key2.mp4
-│   ├── key3.mp4
-│   ├── key4.mp4
 │   └── key_wb.zip
 ├── data_builder
 │   └── keys_with_background.py
@@ -50,7 +52,10 @@ The project is organized as follows:
 │   ├── tiny_yolo_anchors.txt
 │   ├── voc_classes.txt
 │   ├── yolo_anchors.txt
-│   └── yolov3-tiny_zero.weights
+│   ├── yolov3-tiny_weights.h5
+│   ├── yolov3-tiny_weights.png
+│   ├── yolov3-tiny_zero.weights
+│   └── yolov3_weights.png
 ├── models
 │   ├── yolo3
 │   │   ├── __init__.py
@@ -63,7 +68,17 @@ The project is organized as follows:
 │   ├── names.csv
 │   ├── voc_annotation.py
 │   └── yolo.py
+├── video
+│   ├── key1_yolov3_result.mp4
+│   ├── key1_yolov3-tiny_result.mp4
+│   ├── key2_yolov3_result.mp4
+│   ├── key2_yolov3-tiny_result.mp4
+│   ├── key3_yolov3_result.mp4
+│   ├── key3_yolov3-tiny_result.mp4
+│   ├── key4_yolov3_result.mp4
+│   └── key4_yolov3-tiny_result.mp4
 ├── clean.py
+├── create.py
 ├── default_fast_settings.json
 ├── default_settings.json
 ├── detect_key.py
@@ -75,6 +90,8 @@ The project is organized as follows:
 ├── tiny_default_fast_settings.json
 ├── tiny_default_settings.json
 └── train.py
+
+
 ```
 
 The main files are (in order of use):
@@ -143,6 +160,13 @@ What *settings.json parameters are important for _setup.py_:
 * number_keys: there will be between (1, number_keys) in each result image 
 * configuration: path to were the definition of how to build the network lives
 
+### Create
+This file is an auxiliary script for _setup.py_:
+```bash
+python create.py
+```
+it creates a model in the form of a _*.h5_ using the same parameters that
+_setup.py_.
 
 ### Train
 After _what I would do is train the model..._

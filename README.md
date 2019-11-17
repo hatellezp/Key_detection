@@ -84,6 +84,7 @@ The main files are (in order of use):
 * _train.py_
 * _fast_train.py_
 * _detect_key.py_
+* _evaluate.py_
 * _clean.py_
 
 

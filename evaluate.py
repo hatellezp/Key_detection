@@ -218,7 +218,7 @@ evaluating using parameters:
         # note that there are two index: i,j
         # compute the resulting means
         means[0] = (means[0]*i + result[0]) / float(i+1)
-        for j in len(1, len(result)):
+        for j in range(1, len(result)):
             means[j] = (means[j]*i + result[j]) / float(i+1)
 
         results.append(result)

@@ -300,13 +300,14 @@ for i in range(len(METRICS) + 1):
 data = pd.DataFrame(data)
 for i in range(len(METRICS)+1):
     if i == 0:
-        plt.plot('x', 'loss', data=data, color=colors[i])
+        plt.plot('x', 'loss', marker='o', data=data, color=colors[i])
     else:
-       plt.plot('x', METRICS[i-1], data=data, color=colors[i])
+       plt.plot('x', METRICS[i-1], marker='o', data=data, color=colors[i])
 
 plt.xlabel("Number of images")
 plt.ylabel("Metrics")
 plt.legend()
+plt.grid()
 # plt.show()
 
 plt.savefig(MODEL_NAME + "_charts.png")

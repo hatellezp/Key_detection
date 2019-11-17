@@ -318,6 +318,8 @@ plt.ylabel("Metrics")
 plt.legend()
 plt.show()
 
+plt.savefig(MODEL_NAME + "_charts.png")
+
 
 
 

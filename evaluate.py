@@ -224,8 +224,8 @@ evaluating using parameters:
         results.append(result)
 
         string_output = "-at step {}:\n    -mean loss: {}\n".format(i+1, means[0])
-        for j in range(1, len(result)):
-            string_output += "    -mean {}: {}\n".format(METRICS[j], means[j])
+        for j in range(1, len(means)):
+            string_output += "    -mean {}: {}\n".format(METRICS[j-1], means[j])
 
         print(string_output)
 
@@ -256,15 +256,15 @@ evaluating using parameters:
                 .format(i + 1, results[i][0])
             for j in range(1, len(means)):
                 string_output += "    -{}: {}\n"\
-                    .format(METRICS[j], results[i][j])
+                    .format(METRICS[j-1], results[i][j])
 
             print(string_output)
             f.write(string_output)
 
         string_output = "final result:\n    -mean loss: {}\n".format(means[0])
-        for i in range(1, len(METRICS)):
+        for i in range(1, len(means)):
             string_output = "=    -mean {}: {}\n"\
-                .format(METRICS[i], means[i])
+                .format(METRICS[i-1], means[i])
 
         print(string_output)
         f.write(string_output)

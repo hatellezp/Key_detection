@@ -7,7 +7,7 @@ It can also be used to detect keys in video files.
 ![](sample.gif)
 
 
-This work is greatly inspired from [belarbi2733/keras_yolov3](https://github.com/belarbi2733/keras_yolov3). 
+__This work is greatly inspired from [belarbi2733/keras_yolov3](https://github.com/belarbi2733/keras_yolov3).__
 
 ### Sample
 You have some results in the _video_ directory.

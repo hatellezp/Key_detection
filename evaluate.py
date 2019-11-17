@@ -158,19 +158,20 @@ if __name__ == "__main__":
     results = []
     mean_loss = 0
     mean_mean_squared_error = 0
-
+    METRICS = evaljson["metrics"]
+    means = [0] * (len(METRICS) + 1)
 
     info_str="""
 ===========================================================
 evaluating using parameters:
-            MODEL_NAME, {}
-            MODEL_RESULT_H5, {}
-            INPUT_SHAPE, {}
-            NUM_CLASSES, {}
-            LOG_DIR, {}
-            MODEL_RESULTS, {}
-            ANNOTATION_PATH, {}
-            BATCH_SIZE {}
+            MODEL_NAME: {}
+            MODEL_RESULT_H5: {}
+            INPUT_SHAPE: {}
+            NUM_CLASSES: {}
+            LOG_DIR: {}
+            MODEL_RESULTS: {}
+            ANNOTATION_PATH: {}
+            BATCH_SIZE: {}
             NUMBER_OF_EVALUATIONS: {}
             METRICS: {}
 ===========================================================
@@ -183,7 +184,7 @@ evaluating using parameters:
                ANNOTATION_PATH,
                BATCH_SIZE,
                NUMBER_OF_EVALUATIONS,
-               evaljson["metrics"])
+               METRICS)
     print(info_str)
 
     for i in range(NUMBER_OF_EVALUATIONS):
@@ -213,16 +214,20 @@ evaluating using parameters:
                 BATCH_SIZE
         )
 
-        (r_loss, r_mean) = (result[0], result[1])
 
+        # note that there are two index: i,j
         # compute the resulting means
-        mean_loss = (mean_loss*i + r_loss) / float(i+1)
-        mean_mean_squared_error = (mean_mean_squared_error * i + r_mean) / float(i + 1)
+        means[0] = (means[0]*i + result[0]) / float(i+1)
+        for j in len(1, len(result)):
+            means[j] = (means[j]*i + result[j]) / float(i+1)
 
-        results.append((r_loss, r_mean))
+        results.append(result)
 
-        print("at step {}:\n    mean loss: {}\n    mean mse: {}"
-              .format(i+1, mean_loss, mean_mean_squared_error))
+        string_output = "-at step {}:\n    -mean loss: {}\n".format(i+1, means[0])
+        for j in range(1, len(result)):
+            string_output += "    -mean {}: {}\n".format(METRICS[j], means[j])
+
+        print(string_output)
 
         clean.clean(0, prefix="evaluation/")
 
@@ -247,14 +252,19 @@ evaluating using parameters:
 
         for i in range(len(results)):
 
-            string_output = "- at step {}:\n    loss: {}\n    mse: {}\n"\
-                .format(i + 1, results[i][0], results[i][1])
+            string_output = "-at step {}:\n    -loss: {}\n"\
+                .format(i + 1, results[i][0])
+            for j in range(1, len(means)):
+                string_output += "    -{}: {}\n"\
+                    .format(METRICS[j], results[i][j])
 
             print(string_output)
             f.write(string_output)
 
-        string_output = "= final result:\n    mean loss: {}\n    mean mse: {}\n"\
-            .format(mean_loss, mean_mean_squared_error)
+        string_output = "final result:\n    -mean loss: {}\n".format(means[0])
+        for i in range(1, len(METRICS)):
+            string_output = "=    -mean {}: {}\n"\
+                .format(METRICS[i], means[i])
 
         print(string_output)
         f.write(string_output)

@@ -19,5 +19,6 @@
   "passes": 8,
   "initial_epoch": 5,
   "epoch": 10,
-  "batch_size": 16
+  "batch_size": 16,
+  "metrics": ["mean_squared_error"]
 }

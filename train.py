@@ -28,7 +28,7 @@ epoch1 = settings["epoch1"]
 epoch2 = settings["epoch2"]
 batch_size1 = settings["batch_size1"]
 batch_size2 = settings["batch_size2"]
-
+metrics = settings["metrics"]
 
 annotation_path = settings["annotation"]
 
@@ -54,6 +54,7 @@ model_name = settings["model_name"]
 weights_zero_path = settings["weights"]
 
 model_result_h5 = model_results + model_name + "_weights.h5"
+
 
 ################################################################################
 # call 'python.py train.py' beggins here
@@ -127,7 +128,7 @@ if model_name in mc.load_valid_model_names():
         model.compile(optimizer=Adam(lr=1e-3), loss={
             # use custom yolo_loss Lambda layer.
             'yolo_loss': lambda y_true, y_pred: y_pred},
-             metrics=['mean_squared_error'])
+             metrics=metrics)
 
         print('Train on {} samples, val on {} samples, with batch size {}.'
               .format(num_train, num_val, batch_size1))
@@ -166,7 +167,8 @@ if model_name in mc.load_valid_model_names():
         # train
         # recompile to apply the change
         model.compile(optimizer=Adam(lr=1e-4),
-                      loss={'yolo_loss': lambda y_true, y_pred: y_pred})
+                      loss={'yolo_loss': lambda y_true, y_pred: y_pred},
+                      metrics=metrics)
 
         print('Unfreeze all of the layers.')
         print('Train on {} samples, val on {} samples, with batch size {}.'

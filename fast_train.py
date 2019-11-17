@@ -65,7 +65,7 @@ def fast_train(model_name,
         # train
         model.compile(optimizer=Adam(lr=1e-4),
                       loss={'yolo_loss': lambda y_true, y_pred: y_pred},
-                      metrics=['mean_squared_error'])  # recompile to apply the change
+                      metrics=METRICS)  # recompile to apply the change
 
         print('Train on {} samples, val on {} samples, with batch size {}.'
               .format(num_train, num_val, batch_size))
@@ -101,6 +101,7 @@ if __name__ == '__main__':
     BATCH_SIZE = settings["batch_size"]
     PASSES = settings["passes"]
     NUM_IMAGES = settings["num_images"]
+    METRICS = settings["metrics"]
 
     ANNOTATION_PATH = settings["annotation"]
 

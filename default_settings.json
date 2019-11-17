@@ -22,5 +22,6 @@
   "key_size_range_high": 250,
   "back_size": 800,
   "crop": 0.4,
-  "number_keys": 3
+  "number_keys": 3,
+  "metrics": ["mean_squared_error"]
 }

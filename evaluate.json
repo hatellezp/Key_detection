@@ -2,5 +2,5 @@
   "batch_size": 16,
   "num_images": 100,
   "number_of_evaluations": 10,
-  "metrics": ["mean_squared_error"]
+  "metrics": ["mean_squared_error", "mean_absolute_percentage_error"]
 }

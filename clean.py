@@ -23,6 +23,7 @@ def clean(depth, prefix=None):
         print("cleaning temporary models")
         os.system("rm model_data/ep*.h5")
         os.system("rm model_data/*.png")
+        os.system("rm -r logs")
 
     # remove trained model
     # BE SURE YOU WANT THIS

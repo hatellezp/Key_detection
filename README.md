@@ -27,13 +27,13 @@ more from [here](https://pjreddie.com/darknet/).
 ### Structure
 The project is organized as follows:
 ```bash
-── data
+.
+├── data
 │   ├── bckgrnd.zip
 │   ├── key1.mp4
 │   ├── key2.mp4
 │   ├── key3.mp4
 │   ├── key4.mp4
-│   ├── key5.mp4
 │   └── key_wb.zip
 ├── data_builder
 │   └── keys_with_background.py
@@ -56,10 +56,12 @@ The project is organized as follows:
 │   │   ├── __init__.py
 │   │   ├── model.py
 │   │   └── utils.py
+│   ├── coco_annotation.py
 │   ├── convert.py
 │   ├── kmeans.py
 │   ├── model_creation.py
 │   ├── names.csv
+│   ├── voc_annotation.py
 │   └── yolo.py
 ├── clean.py
 ├── default_fast_settings.json

@@ -316,7 +316,7 @@ for i in range(len(METRICS)+1):
 plt.xlabel("Number of images")
 plt.ylabel("Metrics")
 plt.legend()
-plt.show()
+# plt.show()
 
 plt.savefig(MODEL_NAME + "_charts.png")
 

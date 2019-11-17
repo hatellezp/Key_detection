@@ -98,8 +98,9 @@ if __name__ == "__main__":
 
     #=========================================================================
     # note that sometimes the values are loaded from evaluate.json
-    NUMBER_OF_EVALUATIONS = evaljson["number_of_evaluations"]
-    NUM_IMAGES = evaljson["num_images"]  # here for example
+    STEPS = [int(x) for x in evaljson["num_images"]]
+    NUMBER_OF_EVALUATIONS = len(STEPS)
+    NUM_IMAGES = STEPS # here for example
     BATCH_SIZE = evaljson["batch_size"]
 
     PATH_TO_KEYS = settings["path_to_keys"]
@@ -154,13 +155,12 @@ if __name__ == "__main__":
     # we are going to generate n number of evaluations
     # a compute the mean of all results
     # is a good idea to have a low number of images generated
-    number_of_evaluations = 10
     results = []
     mean_loss = 0
     mean_mean_squared_error = 0
     METRICS = evaljson["metrics"]
     means = [0] * (len(METRICS) + 1)
-
+    number_of_evaluations = len(STEPS)
     info_str="""
 ===========================================================
 evaluating using parameters:
@@ -173,6 +173,7 @@ evaluating using parameters:
             ANNOTATION_PATH: {}
             BATCH_SIZE: {}
             NUMBER_OF_EVALUATIONS: {}
+            IMAGES_BY_STEP: {}
             METRICS: {}
 ===========================================================
     """.format(MODEL_NAME,
@@ -184,6 +185,7 @@ evaluating using parameters:
                ANNOTATION_PATH,
                BATCH_SIZE,
                NUMBER_OF_EVALUATIONS,
+               STEPS,
                METRICS)
     print(info_str)
 
@@ -191,6 +193,9 @@ evaluating using parameters:
 
         ""
         clean.clean(0, prefix="evaluation/")
+
+        # number of images given by num_images
+        NUM_IMAGES = STEPS[i]
 
         setup.generates_examples(PATH_TO_KEYS,
                                  PATH_TO_BACKGROUND,
@@ -223,7 +228,8 @@ evaluating using parameters:
 
         results.append(result)
 
-        string_output = "-at step {}:\n    -mean loss: {}\n".format(i+1, means[0])
+        string_output = "-at step {} with {} images:\n    -mean loss: {}\n"\
+            .format(i+1, STEPS[i], means[0])
         for j in range(1, len(means)):
             string_output += "    -mean {}: {}\n".format(METRICS[j-1], means[j])
 
@@ -252,8 +258,8 @@ evaluating using parameters:
 
         for i in range(len(results)):
 
-            string_output = "-at step {}:\n    -loss: {}\n"\
-                .format(i + 1, results[i][0])
+            string_output = "-at step {} with {} images:\n    -loss: {}\n"\
+                .format(i + 1, STEPS[i], results[i][0])
             for j in range(1, len(means)):
                 string_output += "    -{}: {}\n"\
                     .format(METRICS[j-1], results[i][j])

@@ -141,6 +141,7 @@ What *settings.json parameters are important for _setup.py_:
 * crop: keys will be cropped before mix with a percentange between 
     (5%, (100*crop)%)
 * number_keys: there will be between (1, number_keys) in each result image 
+* configuration: path to were the definition of how to build the network lives
 
 
 ### Train

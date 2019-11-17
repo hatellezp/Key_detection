@@ -161,7 +161,8 @@ if __name__ == "__main__":
     METRICS = evaljson["metrics"]
     means = [0] * (len(METRICS) + 1)
     number_of_evaluations = len(STEPS)
-    info_str="""
+
+    info_str=""" 
 ===========================================================
 evaluating using parameters:
             MODEL_NAME: {}
@@ -251,9 +252,8 @@ evaluating using parameters:
     evaluating model: {}
     batch_size: {}
     number of steps: {}
-    number of examples by step: {} 
 ======================================================================
-""".format(MODEL_NAME, BATCH_SIZE, number_of_evaluations, NUM_IMAGES)
+""".format(MODEL_NAME, BATCH_SIZE, number_of_evaluations)
         f.write(string_output)
 
         for i in range(len(results)):
@@ -274,3 +274,50 @@ evaluating using parameters:
 
         print(string_output)
         f.write(string_output)
+
+
+################################################################################
+# attempt to create plot
+from matplotlib import pyplot as plt
+import pandas as pd
+
+colors = ["blue", "green", "red", "cyan", "magenta", "yellow", "black", "white"]
+data = {'x': [str(x) for x in STEPS]}
+
+# first transform the (METRICS, results) matrix
+for i in range(len(METRICS) + 1):
+    this_metric = []
+
+    for j in range(len(results)):
+       this_metric.append(results[j][i])
+
+    if i == 0:
+        data['loss'] = this_metric
+    else:
+        data[METRICS[i-1]] = this_metric
+
+# test this
+mean_squared_error_means = data["mean_squared_error"]
+average_mse = []
+for i in range(len(mean_squared_error_means)):
+    average_mse.append(mean_squared_error_means[i] / float(STEPS[i]))
+data['average_mse'] = average_mse
+
+
+data = pd.DataFrame(data)
+METRICS.append('average_mse') # part of the average_mse test
+
+for i in range(len(METRICS)+1):
+    if i == 0:
+        plt.plot('x', 'loss', data=data, color=colors[i])
+    else:
+       plt.plot('x', METRICS[i-1], data=data, color=colors[i])
+
+plt.xlabel("Number of images")
+plt.ylabel("Metrics")
+plt.legend()
+plt.show()
+
+
+
+

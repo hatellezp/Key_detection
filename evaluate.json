@@ -1,5 +1,5 @@
 {
-  "batch_size": 16,
-  "num_images": ["20", "40", "80", "100", "120", "140", "160", "200"],
-  "metrics": ["mean_squared_error", "mean_absolute_percentage_error"]
+  "batch_size": 8,
+  "num_images": ["10","20", "30","40", "50"],
+  "metrics": ["mean_squared_error"]
 }
